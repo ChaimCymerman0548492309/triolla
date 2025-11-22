@@ -1,14 +1,14 @@
 ﻿import {
   Box,
   Button,
-  Checkbox,
-  TextField,
-  Typography,
   Card,
-  CardContent,
   CardActions,
+  CardContent,
+  Checkbox,
   Chip,
   Stack,
+  TextField,
+  Typography,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import api from '../api';
@@ -95,13 +95,11 @@ export default function Dashboard() {
                   <Typography variant="h6" sx={{ textDecoration: t.completed ? 'line-through' : 'none' }}>
                     {t.title}
                   </Typography>
-
                   {t.description && (
                     <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
                       {t.description}
                     </Typography>
                   )}
-
                   {t.url && (
                     <Typography variant="body2" sx={{ mt: 0.5 }}>
                       <a href={t.url} target="_blank" rel="noopener noreferrer">
@@ -109,13 +107,23 @@ export default function Dashboard() {
                       </a>
                     </Typography>
                   )}
-
                   <Stack direction="row" spacing={1} sx={{ mt: 1 }} flexWrap="wrap">
                     <Chip
                       size="small"
-                      label={`Created: ${new Date(t.createdAt).toLocaleDateString()}`}
+                      label={`Created: ${new Date(t.createdAt).toLocaleDateString()} ${new Date(
+                        t.createdAt,
+                      ).toLocaleTimeString()}`}
                       variant="outlined"
                     />
+                    {t.createdAt &&
+                      (() => {
+                        const now = new Date();
+                        const created = new Date(t.createdAt);
+                        const diffMs = now.getTime() - created.getTime();
+                        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+                        const diffHours = Math.floor((diffMs / (1000 * 60 * 60)) % 24);
+                        return <Chip size="small" color="info" label={`Created ${diffDays}d ${diffHours}h ago`} />;
+                      })()}
                     {t.dueDate && (
                       <Chip size="small" color="warning" label={`Due: ${new Date(t.dueDate).toLocaleDateString()}`} />
                     )}
